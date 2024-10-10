@@ -17,9 +17,8 @@ public class Flat implements Home {
         return area + balconyArea;
     }
 
-    @Override
     public int getFloor() {
-	return floor;
+        return floor;
     }
 
     @Override

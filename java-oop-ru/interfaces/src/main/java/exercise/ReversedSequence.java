@@ -21,7 +21,7 @@ public class ReversedSequence implements CharSequence {
     @Override
     public CharSequence subSequence(int start, int end) {
         return new ReversedSequence(originalString.substring(originalString.length() - end,
-		originalString.length() - start));
+                originalString.length() - start));
     }
 
     @Override
