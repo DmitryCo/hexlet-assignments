@@ -1,65 +1,53 @@
 package exercise;
 
 import java.lang.reflect.Field;
-// BEGIN
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+// BEGIN
 public class Validator {
-    public static List<String> validate(Address address) {
-        List<String> notValidFields = new ArrayList<>();
-
-        Field[] fields = Address.class.getDeclaredFields();
-        for (Field field : fields) {
+    public static List<String> validate(Object obj) throws RuntimeException {
+        Class<?> aClass = obj.getClass();
+        Field[] fields = aClass.getDeclaredFields();
+        List<String> annotatedFields = new ArrayList<>();
+        for (var field : fields) {
             field.setAccessible(true);
             try {
-                if (field.isAnnotationPresent(NotNull.class) && field.get(address) == null) {
-                    notValidFields.add(field.getName());
+                if (field.isAnnotationPresent(NotNull.class) && (field.get(obj) == null)) {
+                    annotatedFields.add(field.getName());
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
-
-        return notValidFields;
+        return annotatedFields;
     }
+
     public static Map<String, List<String>> advancedValidate(Object obj) {
-        Map<String, List<String>> errors = new HashMap<>();
-
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field field : fields) {
+        Class<?> aClass = obj.getClass();
+        Field[] fields = aClass.getDeclaredFields();
+        HashMap<String, List<String>> annotatedFields = new HashMap<>();
+        for (var field : fields) {
             field.setAccessible(true);
-
-            // Проверка на аннотацию @MinLength
-            if (field.isAnnotationPresent(MinLength.class)) {
-                MinLength annotation = field.getAnnotation(MinLength.class);
-                try {
-                    String value = (String) field.get(obj);
-                    if (value != null && value.length() < annotation.minLength()) {
-                        errors.computeIfAbsent(field.getName(), k -> new ArrayList<>())
-                                .add("Length of " + field.getName() + " is less than " + annotation.minLength());
+            try {
+                if (field.isAnnotationPresent(NotNull.class) && (field.get(obj) == null)) {
+                    List<String> errList = new ArrayList<>();
+                    errList.add("can not be null");
+                    annotatedFields.put(field.getName(), errList);
+                } else if (field.isAnnotationPresent(MinLength.class)) {
+                    var minLength = field.getAnnotation(MinLength.class).minLength();
+                    if (String.valueOf(field.get(obj)).length() < minLength) {
+                        List<String> errList = new ArrayList<>();
+                        errList.add(String.format("length less than %s", minLength));
+                        annotatedFields.put(field.getName(), errList);
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
                 }
-            }
-
-            // Проверка на аннотацию @NotNull
-            if (field.isAnnotationPresent(NotNull.class)) {
-                try {
-                    Object value = field.get(obj);
-                    if (value == null) {
-                        errors.computeIfAbsent(field.getName(), k -> new ArrayList<>())
-                                .add(field.getName() + " must not be null");
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
-
-        return errors;
+        return annotatedFields;
     }
 }
 // END
