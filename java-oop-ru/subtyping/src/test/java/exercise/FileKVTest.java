@@ -31,19 +31,21 @@ class FileKVTest {
     }
 
     // BEGIN
-    public void getTest() {
-        KeyValueStorage actual = new FileKV("src/test/resources/file", Map.of("key", "value"));
-        var expected = "value";
-        assertEquals(expected, actual.get("key", "default"));
-    }
-
     @Test
-    public void setTest() {
-        KeyValueStorage expected = new FileKV("src/test/resources/file2", Map.of("key", "value",
-                "key2", "value2"));
-        KeyValueStorage actual = new FileKV("src/test/resources/file1", Map.of("key", "value"));
-        actual.set("key2", "value2");
-        assertEquals(Utils.serialize(expected.toMap()), Utils.serialize(actual.toMap()));
+    void fileKVTest() {
+        KeyValueStorage db = new FileKV("src/test/resources/file", Map.of("key", "value"));
+        assertThat(db.get("key2", "default")).isEqualTo("default");
+        assertThat(db.get("key", "default")).isEqualTo("value");
+
+        db.set("key3", "value3");
+        db.set("key", "10");
+        assertThat(db.get("key3", "default")).isEqualTo("value3");
+        assertThat(db.get("key", "default")).isEqualTo("10");
+
+        db.unset("key");
+        assertThat(db.get("key", "def")).isEqualTo("def");
+
+        assertThat(db.toMap()).isEqualTo(Map.of("key3", "value3"));
     }
     // END
 }
