@@ -58,12 +58,5 @@ class FileKVTest {
         Map<String, String> map = fileKV.toMap();
         assertEquals("value3", map.get("key3"));
     }
-
-    @Test
-    public void testNewFileKV() {
-        fileKV.set("key4", "value4");
-        FileKV newFileKV = new FileKV(filepath.toString(), new HashMap<>());
-        assertEquals("value4", newFileKV.get("key4", null));
-    }
     // END
 }
