@@ -28,6 +28,14 @@ class ValidationTest {
     }
 
     // BEGIN
-    
+    @Test
+    void advancedValidateTest() {
+        Address address = new Address("USA", "Texas", null, "7", "2");
+        Map<String, List<String>> actual = Validator.advancedValidate(address);
+        Map<String, List<String>> expected = new HashMap<>();
+        expected.put("country", List.of("length less than 4"));
+        expected.put("street", List.of("can not be null"));
+        assertThat(actual).isEqualTo(expected);
+    }
     // END
 }
