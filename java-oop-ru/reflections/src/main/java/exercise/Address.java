@@ -1,7 +1,5 @@
 package exercise;
 
-import java.util.Optional;
-
 class Address {
     // BEGIN
     @NotNull
