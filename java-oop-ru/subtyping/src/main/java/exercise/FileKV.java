@@ -1,6 +1,8 @@
 package exercise;
 
 // BEGIN
+import java.util.Map;
+
 public class FileKV implements KeyValueStorage {
     private String filePath;
     private Map<String, String> db;
@@ -18,23 +20,23 @@ public class FileKV implements KeyValueStorage {
     }
 
     @Override
-    void unset(String key) {
+    public void unset(String key) {
         db.remove(key);
         Utils.writeFile(filePath, Utils.serialize(db));
     }
 
     @Override
-    String get(String key, String defaultValue) {
+    public String get(String key, String defaultValue) {
         String serializedData = Utils.readFile(filePath);
-        Map<String, String> unserializedData = Utils.unserialize(serializedData);
+        Map<String, String> deserializedData = Utils.deserialize(serializedData);
 
-        return unserializedData.getOrDefault(key, defaultValue);
+        return deserializedData.getOrDefault(key, defaultValue);
     }
 
     @Override
-    Map<String, String> toMap() {
+    public Map<String, String> toMap() {
         String serializedData = Utils.readFile(filePath);
-        return Utils.unserialize(serializedData);
+        return Utils.deserialize(serializedData);
     }
 }
 // END

@@ -12,21 +12,21 @@ public class InMemoryKV implements KeyValueStorage {
     }
 
     @Override
-    void set(String key, String value) {
+    public void set(String key, String value) {
         db.put(key, value);
     }
     @Override
-    void unset(String key) {
+    public void unset(String key) {
         db.remove(key);
     }
 
     @Override
-    String get(String key, String defaultValue) {
+    public String get(String key, String defaultValue) {
         return db.getOrDefault(key, defaultValue);
     }
 
     @Override
-    Map<String, String> toMap() {
+    public Map<String, String> toMap() {
         return new HashMap<>(db);
     }
 }
