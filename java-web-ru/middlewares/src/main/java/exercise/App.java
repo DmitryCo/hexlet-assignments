@@ -6,8 +6,6 @@ import exercise.controller.RootController;
 import exercise.util.NamedRoutes;
 import io.javalin.rendering.template.JavalinJte;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 
@@ -35,12 +33,11 @@ public final class App {
         app.after(ctx -> {
             String responseBody = ctx.body();
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(
-                    responseBody.getBytes(StandardCharsets.UTF_8));
+            byte[] encodedhash = digest.digest(responseBody.getBytes(StandardCharsets.UTF_8));
             StringBuilder hexString = new StringBuilder(2 * encodedhash.length);
             for (int i = 0; i < encodedhash.length; i++) {
                 String hex = Integer.toHexString(0xff & encodedhash[i]);
-                if(hex.length() == 1) {
+                if (hex.length() == 1) {
                     hexString.append('0');
                 }
                 hexString.append(hex);
