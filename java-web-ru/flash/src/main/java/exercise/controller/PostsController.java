@@ -36,7 +36,7 @@ public class PostsController {
             var post = new Post(name, body);
             PostRepository.save(post);
 
-            ctx.sessionAttribute("flash", "Пост был успешно создан!");
+            ctx.sessionAttribute("flash", "Post was successfully created!");
             ctx.redirect(NamedRoutes.postsPath());
         } catch (ValidationException e) {
             var name = ctx.formParam("name");
