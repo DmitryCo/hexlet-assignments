@@ -42,7 +42,7 @@ public class PeopleController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") long id) {
         personRepository.deleteById(id);
     }
     // END
