@@ -1,6 +1,7 @@
 package exercise.mapper;
 
 // BEGIN
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

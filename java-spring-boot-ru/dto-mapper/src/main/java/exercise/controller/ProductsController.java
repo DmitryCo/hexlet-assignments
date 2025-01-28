@@ -1,6 +1,5 @@
 package exercise.controller;
 
-import exercise.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +43,7 @@ public class ProductsController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductDTO show(@PathVariable long id) {
-        var product = productRepository.findByBarcode(id)
+        var product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
         var productDTO = productMapper.map(product);
         return productDTO;
@@ -55,19 +54,19 @@ public class ProductsController {
     public ProductDTO create(@RequestBody ProductCreateDTO productData) {
         var product = productMapper.map(productData);
         productRepository.save(product);
-        var ProductDTO = productMapper.map(product);
-        return ProductDTO;
+        var productDTO = productMapper.map(product);
+        return productDTO;
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductDTO update(@PathVariable long id, @RequestBody ProductUpdateDTO productData) {
-        var product = productRepository.findByBarcode(id)
+        var product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
         productMapper.update(productData, product);
         productRepository.save(product);
-        var ProductDTO = productMapper.map(product);
-        return ProductDTO;
+        var productDTO = productMapper.map(product);
+        return productDTO;
     }
     // END
 }
